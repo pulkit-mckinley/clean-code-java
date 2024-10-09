@@ -3,59 +3,66 @@ package victor.training.cleancode.kata.videostore;
 import java.util.*;
 
 class Customer {
-	private String name;
-	private Map<Movie, Integer> rentals = new LinkedHashMap<>(); // preserves order of elements
 
-	public Customer(String name) {
-		this.name = name;
-	};
+    private String name;
+    private Map<Movie, Integer> rentalsDuration = new LinkedHashMap<>(); // preserves order of elements
 
-	public void addRental(Movie m, int d) {
-		rentals.put(m, d);
-	}
+    public Customer(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void addRental(Movie movie, int duration) {
+        rentalsDuration.put(movie, duration);
+    }
 
-	public String statement() {
-		double totalAmount = 0;
-		int frequentRenterPoints = 0;
-		String result = "Rental Record for " + getName() + "\n";
-		// loop over each movie rental
-		for (Movie each : rentals.keySet()) {
-			double thisAmount = 0;
-			// determine amounts for every line
-			int dr = rentals.get(each);
-			switch (each.getPriceCode()) {
-				case Movie.REGULAR:
-					thisAmount += 2;
-					if (dr > 2)
-						thisAmount += (dr - 2) * 1.5;
-					break;
-				case Movie.NEW_RELEASE:
-					thisAmount += dr * 3;
-					break;
-				case Movie.CHILDRENS:
-					thisAmount += 1.5;
-					if (dr > 3)
-						thisAmount += (dr - 3) * 1.5;
-					break;
-			}
-			// add frequent renter points
-			frequentRenterPoints++;
-			// add bonus for a two day new release rental
-			if (each.getPriceCode() != null &&
-				 (each.getPriceCode() == Movie.NEW_RELEASE)
-				 && dr > 1)
-				frequentRenterPoints++;
-			// show figures line for this rental
-			result += "\t" + each.getTitle() + "\t" + thisAmount + "\n";
-			totalAmount += thisAmount;
-		}
-		// add footer lines
-		result += "Amount owed is " + totalAmount + "\n";
-		result += "You earned " + frequentRenterPoints + " frequent renter points";
-		return result;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public String getStatement() {
+        double amountOwed = 0;
+        int frequentRenterPoints = 0;
+
+        String statement = "Rental Record for " + getName() + "\n";
+
+        for (Movie movie : rentalsDuration.keySet()) {
+
+            if (isBonusValid(movie)) {
+                frequentRenterPoints++;
+            }
+            frequentRenterPoints++;
+
+            double movieAmount = calculateMovieAmount(movie);
+            amountOwed += movieAmount;
+
+            // show figures line for this rental
+            statement += "\t" + movie.getTitle() + "\t" + movieAmount + "\n";
+        }
+
+        statement += addFooterLines(amountOwed, frequentRenterPoints);
+        return statement;
+    }
+
+    private String addFooterLines(double amountOwed, int frequentRenterPoints) {
+        String footerStatement = "";
+        footerStatement += "Amount owed is " + amountOwed + "\n";
+        footerStatement += "You earned " + frequentRenterPoints + " frequent renter points";
+        return footerStatement;
+    }
+
+    // add bonus for a two day new release rental
+    private boolean isBonusValid(Movie movie) {
+        if (movie.getPriceCode() == null) {
+            return false;
+        }
+
+        boolean isNewRelease = movie.getPriceCode() == Movie.PriceCode.NEW_RELEASE;
+        return isNewRelease && rentalsDuration.get(movie) > 1;
+    }
+
+    private double calculateMovieAmount(Movie movie) {
+
+        int duration = rentalsDuration.get(movie);
+        return movie.getAmountFor(duration);
+    }
 }

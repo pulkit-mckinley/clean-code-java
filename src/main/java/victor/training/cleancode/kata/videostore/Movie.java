@@ -1,25 +1,35 @@
 package victor.training.cleancode.kata.videostore;
+
 public class Movie {
-	public static final int CHILDRENS = 2;
-	public static final int REGULAR = 0;
-	public static final int NEW_RELEASE = 1;
-	private String _title;
-	Integer _priceCode;
 
-	public Movie(String title, Integer priceCode) {
-		_title = title;
-		_priceCode = priceCode;
-	}
+    public enum PriceCode {
+        REGULAR,
+        CHILDREN,
+        NEW_RELEASE
+    }
 
-	public Integer getPriceCode() {
-		return _priceCode;
-	}
+    private String _title;
+    PriceCode _priceCode;
 
-	public void setPriceCode(Integer arg) {
-		_priceCode = arg;
-	}
+    protected Movie(String title, PriceCode priceCode) {
+        _title = title;
+        _priceCode = priceCode;
+    }
 
-	public String getTitle() {
-		return _title;
-	};
+    public double getAmountFor(int duration) {
+        throw new RuntimeException("wrong movie type");
+    }
+
+    public PriceCode getPriceCode() {
+        return _priceCode;
+    }
+
+    public void setPriceCode(PriceCode arg) {
+        _priceCode = arg;
+    }
+
+    public String getTitle() {
+        return _title;
+    }
+;
 }
