@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CustomerTest {
+class CustomerTest {
 
     @Test
-    public void characterizationTest() {
+    void characterizationTest() {
         Customer customer = new Customer("John Doe");
         customer.addRental(new NewReleaseMovie("Star Wars"), 6);
         customer.addRental(new ChildrenMovie("Sofia"), 7);
