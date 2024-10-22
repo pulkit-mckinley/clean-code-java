@@ -27,9 +27,7 @@ public class Expense {
                 en = "Car Rental";
                 break;
         }
-
         return en;
-
     }
 
     public boolean isMealOver() {
