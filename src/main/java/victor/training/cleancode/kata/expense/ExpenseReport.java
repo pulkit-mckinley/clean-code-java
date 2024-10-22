@@ -16,32 +16,21 @@ public class ExpenseReport {
                 mealExpenses += expense.amount;
             }
 
-            String en = null;
-            switch (expense.type) {
-                case "DINNER":
-                    en = "Dinner";
-                    break;
-                case "BREAKFAST":
-                    en = "Breakfast";
-                    break;
-                case "CAR_RENTAL":
-                    en = "Car Rental";
-                    break;
-            }
-
-            // meal over expenses
-            String m = expense.type.equals("DINNER") && expense.amount > 5000 || expense.type.equals("BREAKFAST") && expense.amount > 1000 ? "X" : " ";
-            isMealOver |= m.equals("X");
-
-            System.out.println(en + "\t" + expense.amount + "\t" + m);
+            isMealOver |= expense.isMealOver();
+            expense.printExpense();
 
             totalExpense += expense.amount;
         }
 
+        printTotalExpenses(mealExpenses, totalExpense, isMealOver);
+    }
+
+    private void printTotalExpenses(int mealExpenses, int totalExpense, boolean isMealOver) {
         System.out.println("Meal expenses: " + mealExpenses);
         System.out.println("Total expenses: " + totalExpense);
         if (isMealOver) {
             System.out.println("Meal expenses exceed limit");
         }
     }
+
 }
