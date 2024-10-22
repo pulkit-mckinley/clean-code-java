@@ -31,4 +31,12 @@ public class Expense {
         return en;
 
     }
+
+    public boolean isMealOver() {
+        return this.type.equals("DINNER") && this.amount > 5000 || this.type.equals("BREAKFAST") && this.amount > 1000;
+    }
+
+    public void printExpense() {
+        System.out.println(this.getEnglishName() + "\t" + this.amount + "\t" + (this.isMealOver() ? "X" : ""));
+    }
 }
